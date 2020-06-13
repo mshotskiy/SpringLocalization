@@ -6,14 +6,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReadService {
+public class FileService {
     ArrayList<Question> questionList = new ArrayList<>();
 
-    public List<Question> getQuestions(String fileLink) throws FileNotFoundException {
-        String[] lines = readFile(fileLink).split("\n");
+    public ArrayList<Question> getQuestions(InputStream inputStream){
+        String[] lines = readFile(inputStream).split("\n");
 
-        for (int i = 0; i < lines.length; i++){
-            String[] fields = lines[i].split(";");
+        for (String line : lines) {
+            String[] fields = line.split(";");
             questionList.add(getQuestionFromArray(fields));
         }
 
@@ -22,22 +22,22 @@ public class ReadService {
 
     private Question getQuestionFromArray(String[] fields){
         if (fields.length == 4){
-            Integer id = Integer.parseInt(fields[0]);
+            int id = Integer.parseInt(fields[0]);
             String question = fields[1];
             String answers = fields[2];
             String trueAnswer = fields[3];
             return new Question(id,question,answers,trueAnswer);
         }else {
-            return null;
+            return null;//to fix!
         }
     }
 
-    private String readFile(String fileLink){
+    private String readFile(InputStream inputStream){
         StringBuilder result = new StringBuilder();
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileLink)))) {
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = br.readLine()) != null){
-                result.append(line).append("/n");
+                result.append(line).append("\n");
             }
         }catch (IOException exception){
             System.err.println("file not found");

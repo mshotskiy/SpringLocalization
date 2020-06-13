@@ -16,4 +16,20 @@ public class Question {
         this.answer = answer;
         this.trueAnswer = trueAnswer;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public String getTrueAnswer() {
+        return trueAnswer;
+    }
 }
