@@ -1,16 +1,26 @@
 package org.maks.service;
 
 import org.maks.model.Question;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
+@Service
 public class FileService {
     ArrayList<Question> questionList = new ArrayList<>();
+    private final MessageSource messageSource;
+    private Locale locale;
 
-    public ArrayList<Question> getQuestions(InputStream inputStream){
-        String[] lines = readFile(inputStream).split("\n");
+    public FileService(MessageSource messageSource) {
+        this.messageSource = messageSource;
+        locale = new Locale("RU");
+    }
+
+    public ArrayList<Question> getQuestions(){
+        String[] lines = readFile(getInputStream()).split("\n");
 
         for (String line : lines) {
             String[] fields = line.split(";");
@@ -43,5 +53,10 @@ public class FileService {
             System.err.println("file not found");
         }
         return result.toString();
+    }
+
+    private InputStream getInputStream(){
+        return WriteService.class.getClassLoader().getResourceAsStream(
+                messageSource.getMessage("url.questions",new String[]{}, locale));
     }
 }

@@ -1,20 +1,42 @@
 package org.maks.service;
 
+import org.maks.Main;
 import org.maks.model.Question;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Locale;
 
+
+
+@Service
 public class WriteService {
+
+    private final MessageSource messageSource;
+    private Locale locale;
+
+    public WriteService(MessageSource messageSource) {
+        this.messageSource = messageSource;
+        locale = new Locale("RU");
+    }
+
+
 
     public void writeToConsole(List<Question> questions){
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String name = "";
         int score = 0;
 
-        System.out.println("Please enter your name...  ");
+        System.out.println(messageSource.getMessage(
+                "read.username",
+                new String[]{},
+                locale
+        ));
         try {
             name = reader.readLine();
         } catch (IOException exception) {
@@ -23,7 +45,12 @@ public class WriteService {
 
         System.out.println(questions.toString());
         for (Question question : questions) {
-            System.out.printf("Question number %d: %s answers: %s",question.getId(), question.getQuestion(),
+            System.out.printf(messageSource.getMessage(
+                    "write.questions",
+                    new String[]{},
+                    locale),
+                    question.getId(),
+                    question.getQuestion(),
                     question.getAnswer());
             try {
                 String userAnswer = reader.readLine().toLowerCase();
@@ -36,7 +63,10 @@ public class WriteService {
 
         }
 
-        System.out.printf("Congratulations %s you have %d points", name, score);
+        System.out.printf(messageSource.getMessage(
+                "write.score",
+                new String[]{},
+                locale), name, score);
 
     }
 
